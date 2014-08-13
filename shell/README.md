@@ -96,22 +96,29 @@ the internet.  (We're not going to talk about git right now, but it's a tool for
 doing version control.)
 
 Now let's go in to that directory
+
     cd edamame-data
+
 This stands for 'change directory'
 
 In this directory, there should be some things we just downloaded.
 Let's check. Type:
+
     ls
+
 ls stands for 'list' and it lists the contents of a directory.
 
 There's a few directories there, but not too much. Let's go look in the shell
 lesson.
+
     cd shell
     ls
 
 In there, all mixed up together are files and directories/folders. If we want to
 know which is which, we can type:
+
     ls -F
+
 Anything with a "/" after it is a directory.  
 Things with a "*" after them are programs.  
 It there's nothing there it's a file.
