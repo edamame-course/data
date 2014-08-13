@@ -654,6 +654,12 @@ just want the number of lines, we can use the `-l` flag for `lines`.
 Redirecting is not super intuitive, but it's really powerful for stringing
 together these different commands, so you can do whatever you need to do.
 
+The philosophy behind these command line programs is that none of them
+really do anything all that impressive. BUT when you start chaining
+them together, you can do some really powerful things really
+efficiently. If you want to be proficient at using the shell, you must
+learn to become proficient with the pipe and redirection operators:
+`|`, `>`, `>>`.
 
 ## Creating, moving, copying, and removing
 
@@ -722,13 +728,43 @@ we just made. Enter the following command:
 
     rm -r new
 
+## Writing files
+
+We've been able to do a lot of work with files that already exist, but what
+if we want to write our own files. Obviously, we're not going to type in
+a FASTA file, but you'll see as we go through other tutorials, there are
+a lot of reasons we'll want to write a file, or edit an existing file.
+
+To write in files, we're going to use the program `nano`. We're going to create
+a file that contains the favorite grep command so you can remember it for later. We'll name this file
+'awesome.sh'.
+
+    nano awesome.sh
+
+Now you have something that looks like
+
+![nano1.png](nano1.png)
+
+Type in your command, so it looks like
+
+![nano2.png](nano2.png)
+
+Now we want to save the file and exit. At the bottom of nano, you see the "^X Exit". That
+means that we use Ctrl-X to exit. Type `Ctrl-X`. It will ask if you want to save it. Type `y` for yes.
+Then it asks if you want that file name. Hit 'Enter'.
+
+Now you've written a file. You can take a look at it with less or cat, or open it up again and edit it.
+
+***
+**Exercise**
+Open 'awesome.sh' and add "echo AWESOME!" after the grep command and save the file.
+
+We're going to come back and use this file in just a bit.
+
+***
 
 
-
-# Lesson Part 2
-
-
-## Which program?
+## Running programs
 
 Commands like `ls`, `rm`, `echo`, and `cd` are just ordinary programs
 on the computer. A program is just a file that you can *execute*. The
@@ -788,270 +824,33 @@ Or by entering:
 When there are no `/` characters, the shell assumes you want to look
 in one of the default places for the program.
 
+## Writing scripts
 
-## Redirection
+We know how to write files and run scripts, so I bet you can guess where
+this is headed. We're going to run our own script!
 
-Let's turn to the interviews that we
-began with. This data is located in the `~/edamame-data/shell/data`
-directory. Each subdirectory corresponds to a particular participant
-in the study. Navigate to the `Bert` subdirectory in `files`.  There
-are a bunch of text files which contain experimental data
-results. Lets print them all:
+Go in to the 'MiSeq' directory where we created 'awesome.sh' before. Remember we wrote our
+favorite grep command in there. Since we like it so much, we might want to run it
+again, or even all the time. Instead of writing it out every time, we can just run it as
+a script.
 
-    cat au*
+It's a command, so we should just be able to run it. Give it try.
 
-Now enter the following command:
+    ./awesome.sh
 
-    cat au* > ../all_data
+Alas, we get `-bash: ./awesome.sh: Permission denied`. This is because we haven't told
+the computer that it's a program. To do that we have to make it 'executable'. We do this
+by changing its mode. The command for that is `chmod` - change mode. We're going to change the mode
+of this file, so that it's executable and the computer knows it's OK to run it as a program.
 
-This tells the shell to take the output from the `cat au*` command and
-dump it into a new file called `../all_data`. To verify that this
-worked, examine the `all_data` file. If `all_data` had already
-existed, we would overwritten it. So the `>` character tells the shell
-to take the output from what ever is on the left and dump it into the
-file on the right. The `>>` characters do almost the same thing,
-except that they will append the output to the file if it already
-exists.
+    chmod +x awesome.sh
 
-* * * *
-**Short Exercise**
+Now let's try running it again
 
-Use `>>`, to append the contents of all of the files whose names
-contain the number 4 in the directory:
+    ./awesome.sh
 
-    /home/username/edamame/data/shell/files/gerdal
-
-to the existing `all_data` file. Thus, when you are done `all_data`
-should contain all of the experiment data from Bert and any
-experimental data file from gerdal with filenames that contain the
-number 4.
-
-* * * *
-
-
-
-
-## Count the words
-
-The `wc` program (word count) counts the number of lines, words, and
-characters in one or more files. Make sure you are in the `data`
-directory, then enter the following command:
-
-    wc Bert/* gerdal/*4*
-
-For each of the files indicated, `wc` has printed a line with three
-numbers. The first is the number of lines in that file. The second is
-the number of words. Finally, the total number of characters is
-indicated. The final line contains this information summed over all of
-the files. Thus, there were 10445 characters in total.
-
-Remember that the `Bert/*` and `gerdal/*4*` files were merged
-into the `all_data` file. So, we should see that `all_data` contains
-the same number of characters:
-
-    wc all_data
-
-Every character in the file takes up one byte of disk space. Thus, the
-size of the file in bytes should also be 10445. Let's confirm this:
-
-    ls -l all_data
-
-Remember that `ls -l` prints out detailed information about a file and
-that the fifth column is the size of the file in bytes.
-
-* * * *
-
-## The awesome power of the Pipe
-
-Suppose I wanted to only see the total number of character, words, and
-lines across the files `Bert/*` and `gerdal/*4*`. I don't want to
-see the individual counts, just the total. Of course, I could just do:
-
-    wc all_data
-
-Since this file is a concatenation of the smaller files. Sure, this
-works, but I had to create the `all_data` file to do this. Thus, I
-have wasted a precious 10445 bytes of hard disk space. We can do this
-*without* creating a temporary file, but first I have to show you two
-more commands: `head` and `tail`. These commands print the first few,
-or last few, lines of a file, respectively. Try them out on
-`all_data`:
-
-    head all_data
-    tail all_data
-
-The `-n` option to either of these commands can be used to print the
-first or last `n` lines of a file. To print the first/last line of the
-file use:
-
-    head -n 1 all_data
-    tail -n 1 all_data
-
-Let's turn back to the problem of printing only the total number of
-lines in a set of files without creating any temporary files. To do
-this, we want to tell the shell to take the output of the `wc Bert/*
-gerdal/*4*` and send it into the `tail -n 1` command. The `|`
-character (called pipe) is used for this purpose. Enter the following
-command:
-
-    wc Bert/* gerdal/Data0559 | tail -n 1
-
-This will print only the total number of lines, characters, and words
-across all of these files. What is happening here? Well, `tail`, like
-many command line programs will read from the *standard input* when it
-is not given any files to operate on. In this case, it will just sit
-there waiting for input. That input can come from the user's keyboard
-*or from another program*. Try this:
-
-    tail -n 2
-
-Notice that your cursor just sits there blinking. Tail is waiting for
-data to come in. Now type:
-
-    French
-    fries
-    are
-    good
-
-then CONTROL+d. You should see the lines:
-
-    are
-    good
-
-printed back at you. The CONTROL+d keyboard shortcut inserts an
-*end-of-file* character. It is sort of the standard way of telling the
-program "I'm done entering data". The `|` character is replaces the
-data from the keyboard with data from another command. You can string
-all sorts of commands together using the pipe.
-
-The philosophy behind these command line programs is that none of them
-really do anything all that impressive. BUT when you start chaining
-them together, you can do some really powerful things really
-efficiently. If you want to be proficient at using the shell, you must
-learn to become proficient with the pipe and redirection operators:
-`|`, `>`, `>>`.
-
-
-### A sorting example
-
-Let's create a file with some words to sort for the next example. We
-want to create a file which contains the following names:
-
-    Bob
-    Alice
-    Diane
-    Charles
-
-To do this, we need a program which allows us to create text
-files. There are many such programs, the easiest one which is
-installed on almost all systems is called `nano`. Navigate to `/tmp`
-and enter the following command:
-
-    nano toBeSorted
-
-(If you don't have nano, you can use another text editor or vi)
-Now enter the four names as shown above. When you are done, press
-CONTROL+O to write out the file. Press enter to use the file name
-`toBeSorted`. Then press CONTROL+x to exit `nano`.
-
-When you are back to the command line, enter the command:
-
-    sort toBeSorted
-
-Notice that the names are now printed in alphabetical order.
-
-* * * *
-**Short Exercise**
-
-Use the `echo` command and the append operator, `>>`, to append your
-name to the file, then sort it and make a new file called Sorted.
-
-* * * *
-
-Let's navigate back to `~/msu_al340/data`. Enter the following command:
-
-    wc Bert/* | sort -k 3 -n
-
-We are already familiar with what the first of these two commands
-does: it creates a list containing the number of characters, words,
-and lines in each file in the `Bert` directory. This list is then
-piped into the `sort` command, so that it can be sorted. Notice there
-are two options given to sort:
-
-1.  `-k 3`: Sort based on the third column
-2.  `-n`: Sort in numerical order as opposed to alphabetical order
-
-Notice that the files are sorted by the number of characters.
-
-* * * *
-**Short Exercise**
-
-1. Combine the `wc`, `sort`, `head` and `tail` commands so that only the
-`wc` information for the largest file is listed
-
-Hint: To print the smallest file, use:
-
-    wc Bert/* | sort -k 3 -n | head -n 1
-
-* * * *
-
-Printing the smallest file seems pretty useful. We don't want to type
-out that long command often. Let's create a simple script, a simple
-program, to run this command. The program will look at all of the
-files in the current directory and print the information about the
-smallest one. Let's call the script `smallest`. We'll use `nano` to
-create this file. Navigate to the `data` directory, then:
-
-    nano smallest
-
-Then enter the following text:
-
-    #!/bin/bash
-    wc * | sort -k 3 -n | head -n 1
-
-Now, `cd` into the `Bert` directory and enter the command
-`../smallest`. Notice that it says permission denied. This happens
-because we haven't told the shell that this is an executable
-file. If you do `ls -l ../smallest`, it will show you the permissions on
-the left of the listing.
-
-Enter the following commands:
-
-    chmod a+x ../smallest
-    ../smallest
-
-The `chmod` command is used to modify the permissions of a file. This
-particular command modifies the file `../smallest` by giving all users
-(notice the `a`) permission to execute (notice the `x`) the file. If
-you enter:
-
-    ls -l ../smallest
-
-You will see that the file name is green and the permissions have changed.
-Congratulations, you just created your first shell script!
-
-# Searching files
-
-You can search the contents of a file using the command `grep`. The
-`grep` program is very powerful and useful especially when combined
-with other commands by using the pipe. Navigate to the `Bert`
-directory. Every data file in this directory has a line which says
-"Range". Lets list all of the ranges from the interviews that Bert
-conducted:
-
-    grep Range *
-
-* * * *
-**Short Exercise**
-
-Create an executable script called `smallestrange` in the `data`
-directory, that is similar to the `smallest` script, but prints the
-file containing the file with the smallest Range. Use the commands
-`grep`, `sort`, and `tail` to do this.
-
-* * * *
-
-
+Now you should have seen some output, and of course, it's AWESOME!
+Congratulations, you just created your first shell script! You're set to rule the world.
 
 
 
@@ -1142,14 +941,6 @@ have probably had the same question.
 - Learn by doing. There's no real other way to learn this than by trying it
 out.  Write your next paper in nano (really emacs or vi), open pdfs from
 the command line, automate something you don't really need to automate.
-
-## What are computational resources at MSU
-
-- The people who run this server
-- iCER and the High Performance Computing Cluster http://icer.msu.edu
-If you're doing work with a professor, you can get a free account and storage
-on the HPCC.  There are also people at iCER who will help get you started
-or answer questions.
 
 
 ## Bonus:
