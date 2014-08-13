@@ -757,6 +757,7 @@ Now you've written a file. You can take a look at it with less or cat, or open i
 
 ***
 **Exercise**
+
 Open 'awesome.sh' and add "echo AWESOME!" after the grep command and save the file.
 
 We're going to come back and use this file in just a bit.
@@ -895,39 +896,7 @@ then we pipe them to `xargs`.  `xargs` takes the items given to it
 and passes them as arguments to `grep`.  `xargs` generally only creates
 a single instance of `grep` (or whatever program it is running).
 
-* * * *
-**Short Exercise**
 
-Navigate to the `data` directory. Use one `find` command to perform each
-of the operations listed below (except number 2, which does not
-require a `find` command):
-
-1.  Find any file whose name is "NOTES" within `data` and delete it
-
-2.  Create a new directory called `cleaneddata`
-
-3.  Move all of the files within `data` to the `cleaneddata` directory
-
-4.  Rename all of the files to ensure that they end in `.txt` (note:
-    it is ok for the file name to end in `.txt.txt`
-
-Hint: If you make a mistake and need to start over just do the
-following:
-
-1.  Navigate to the `shell` directory
-
-2.  Delete the `data` directory
-
-3.  Enter the command: `git checkout -- data` You should see that the
-    data directory has reappeared in its original state
-
-**BONUS**
-
-Redo exercise 4, except rename only the files which do not already end
-in `.txt`. You will have to use the `man` command to figure out how to
-search for files which do not match a certain name.
-
-* * * *
 
 ## Where can I learn more about the shell?
 
