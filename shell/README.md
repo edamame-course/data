@@ -36,7 +36,7 @@ knowing how to use the shell is transformative.
 ![Automation](gvng.jpg)
 
   Unix is user-friendly. It's just very selective about who its friends are.
-  - Anonymous
+
 
 Today we're going to go through how to access Unix/Linux and some of the basic
 shell commands.
@@ -188,11 +188,12 @@ Type
 Now do `ls` and `pwd`. See now that we went back up in to the 'edamame'
 directory. `..` just means go back up a level.
 
-** Exercise
+***
+**Exercise**
 
 Now we're going to try a hunt.  
-Move around in the 'hidden' directory and try to find the file youfoundit.txt
-
+Move around in the 'hidden' directory and try to find the file 'youfoundit.txt'
+***
 
 ## Arguments
 
@@ -246,9 +247,11 @@ The `cd` command works in a similar way. Try entering:
 and you will jump directly to `hidden` without having to go through
 the intermediate directory.
 
-** Exercise:
+****
+**Exercise**
 
-Try finding the anotherfile.txt file without changing directories.
+Try finding the 'anotherfile.txt' file without changing directories.
+****
 
 ## Full vs. Relative Paths
 
